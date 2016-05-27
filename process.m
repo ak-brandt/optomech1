@@ -1,24 +1,22 @@
 NE=result.NormeE
-R=800
-wl=400;
-dl=5;
-n1=1.33;
-n2=1.8;
-n3=1.6;
+
+R=800 % Sphere radius
+wl=400; % Wavelength
+dl=5; % Stepsize
+n1=1.33; % Medium refractive index
+n2=1.8; % Sphere refractive index
+n3=1.6; % Nanoparticle refractive index
 m=n3/n1;
-ro=10;
-[Fz,Fy]=fdip(NE,n3,m,ro,dl);
+ro=10; % Nanoparticle radius
+[Fz,Fy]=fdip(NE,n3,m,ro*1e-9,dl*1e-9);
 figure;
 %surf(Fz);
 %figure
 %surf(Fy);
 enddir='/home/ak/Документы/Lab/Optical Force/Figures/FindMin_corrected/'
-fr=161;%
+fr=R/dl+1;
 fl=321;
-%Fzs=Fz(:,fr+1:fl);
-%Fzs(fr+1:fr*2,fr+1:fl)=Fz(end:-1:1,fr+1:fl);
-%Fys=Fy(:,fr+1:fl);
-%Fys(fr+1:fr*2,fr+1:fl)=Fy(end:-1:1,fr+1:fl);
+
 yframe=40;
 lbl=['R-' num2str(R) '-wl-' num2str(wl) '-n2-' num2str(n2) '-n1-' num2str(n1) '-corrected-force-for-np-with-n3-' num2str(n3) '-dl-' num2str(dl) '-ro-' num2str(ro) '-yframe-' num2str(yframe)];
 
@@ -32,19 +30,21 @@ Fys(yframe+1:yframe*2,:)=Fy(1:yframe,fr+1:fl);
 
 
 
+
 figure
 z=surf(zrange,yrange,Fzs,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 title('Fz for 1 V/m initial field');
-xlabel('nm');
-ylabel('nm');
+xlabel('z, nm');
+ylabel('y, nm');
 zlabel('Force, N');
+%set(findall(fig,'-property','FontSize'),'FontSize',12)
 
 multisave(z,[enddir '/' lbl],[lbl '-Fz'],{'png','fig','jpg'}); 
 figure;
 z=surf(zrange,yrange,Fys,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 title('Fy for 1 V/m initial field')
-xlabel('nm');
-ylabel('nm');
+xlabel('z, nm');
+ylabel('y, nm');
 zlabel('Force, N')
 
 multisave(z,[enddir '/' lbl],[lbl '-Fy'],{'png','fig','jpg'}); 
@@ -59,11 +59,11 @@ for i=1:1:length(Z)
 end;
 %}
 figure
-z=pcolor(SFzs);
+z=pcolor(zrange,yrange,SFzs);
 set(z,'EdgeColor','none','LineStyle','none');
 title('Signum Fz');
-xlabel('nm');
-ylabel('nm');
+xlabel('z, nm');
+ylabel('y, nm');
 
 multisave(z,[enddir '/' lbl],[lbl '-SignumFz'],{'png','fig','jpg'}); 
 figure
@@ -77,9 +77,12 @@ for i=1:1:length(Z2)
     PC2(Z2(i),Y2(i))=1;
 end;
 %}
-z=pcolor(SFys);
+z=pcolor(zrange,yrange,SFzs);
 set(z,'EdgeColor','none','LineStyle','none');
 title('Signum Fy');
-xlabel('10e-8 m');
-ylabel('10e-8 m');
+xlabel('z, nm');
+ylabel('y, nm');
 multisave(z,[enddir '/' lbl],[lbl '-SignumFy'],{'png','fig','jpg'}); 
+
+figHandles = findall(0,'Type','figure');
+set(findall(figHandles,'-property','FontSize'),'FontSize',25)
