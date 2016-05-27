@@ -1,19 +1,29 @@
 NE=result.NormeE
-[Fz,Fy]=fdip(NE,1.6,1.195,10e-9,5e-9);
+R=800
+wl=400;
+dl=5;
+n1=1.33;
+n2=1.8;
+n3=1.6;
+m=n3/n1;
+ro=10;
+[Fz,Fy]=fdip(NE,n3,m,ro,dl);
 figure;
 %surf(Fz);
 %figure
 %surf(Fy);
-enddir='/home/ak/Документы/Lab/Optical Force/Figures/FindMin/'
-lbl='R-800-wl-400-n-1.8-n0-1.33-corrected-force-for-npn-1.59-25-orders-step-5-ro-10'
+enddir='/home/ak/Документы/Lab/Optical Force/Figures/FindMin_corrected/'
 fr=161;%
 fl=321;
 %Fzs=Fz(:,fr+1:fl);
 %Fzs(fr+1:fr*2,fr+1:fl)=Fz(end:-1:1,fr+1:fl);
 %Fys=Fy(:,fr+1:fl);
 %Fys(fr+1:fr*2,fr+1:fl)=Fy(end:-1:1,fr+1:fl);
+yframe=40;
+lbl=['R-' num2str(R) '-wl-' num2str(wl) '-n2-' num2str(n2) '-n1-' num2str(n1) '-corrected-force-for-np-with-n3-' num2str(n3) '-dl-' num2str(dl) '-ro-' num2str(ro) '-yframe-' num2str(yframe)];
 
-yframe=80;
+zrange=linspace(2.5,(fl-fr-1)*5+2.5,fl-fr);
+yrange=linspace(-yframe*5+2.5,yframe*5-2.5,2*yframe);
 
 Fzs=Fz(yframe:-1:1,fr+1:fl);
 Fzs(yframe+1:yframe*2,:)=Fz(1:yframe,fr+1:fl);
@@ -23,18 +33,18 @@ Fys(yframe+1:yframe*2,:)=Fy(1:yframe,fr+1:fl);
 
 
 figure
-z=surf(Fzs,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
+z=surf(zrange,yrange,Fzs,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 title('Fz for 1 V/m initial field');
-xlabel('10e-8 m');
-ylabel('10e-8 m');
+xlabel('nm');
+ylabel('nm');
 zlabel('Force, N');
 
 multisave(z,[enddir '/' lbl],[lbl '-Fz'],{'png','fig','jpg'}); 
 figure;
-z=surf(Fys,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
+z=surf(zrange,yrange,Fys,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 title('Fy for 1 V/m initial field')
-xlabel('10e-8 m');
-ylabel('10e-8 m');
+xlabel('nm');
+ylabel('nm');
 zlabel('Force, N')
 
 multisave(z,[enddir '/' lbl],[lbl '-Fy'],{'png','fig','jpg'}); 
@@ -52,8 +62,8 @@ figure
 z=pcolor(SFzs);
 set(z,'EdgeColor','none','LineStyle','none');
 title('Signum Fz');
-xlabel('10e-8 m');
-ylabel('10e-8 m');
+xlabel('nm');
+ylabel('nm');
 
 multisave(z,[enddir '/' lbl],[lbl '-SignumFz'],{'png','fig','jpg'}); 
 figure
