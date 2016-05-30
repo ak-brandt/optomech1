@@ -32,22 +32,21 @@ Fys(yframe+1:yframe*2,:)=Fy(1:yframe,fr+1:fl);
 
 
 figure
-z=surf(zrange,yrange,Fzs,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
+z1=surf(zrange,yrange,Fzs,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 title('Fz for 1 V/m initial field');
 xlabel('z, nm');
 ylabel('y, nm');
 zlabel('Force, N');
 %set(findall(fig,'-property','FontSize'),'FontSize',12)
 
-multisave(z,[enddir '/' lbl],[lbl '-Fz'],{'png','fig','jpg'}); 
 figure;
-z=surf(zrange,yrange,Fys,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
+z2=surf(zrange,yrange,Fys,'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 title('Fy for 1 V/m initial field')
 xlabel('z, nm');
 ylabel('y, nm');
 zlabel('Force, N')
 
-multisave(z,[enddir '/' lbl],[lbl '-Fy'],{'png','fig','jpg'}); 
+
 SFzs=sign(Fzs)
 %{
 zer(1:fr,1:fl-fr-1)=SFzs(1:fr,1:fl-fr-1)+SFzs(1:fr,2:fl-fr)
@@ -59,13 +58,12 @@ for i=1:1:length(Z)
 end;
 %}
 figure
-z=pcolor(zrange,yrange,SFzs);
-set(z,'EdgeColor','none','LineStyle','none');
+z3=pcolor(zrange,yrange,SFzs);
+set(z3,'EdgeColor','none','LineStyle','none');
 title('Signum Fz');
 xlabel('z, nm');
 ylabel('y, nm');
 
-multisave(z,[enddir '/' lbl],[lbl '-SignumFz'],{'png','fig','jpg'}); 
 figure
 
 SFys=sign(Fys)
@@ -77,12 +75,35 @@ for i=1:1:length(Z2)
     PC2(Z2(i),Y2(i))=1;
 end;
 %}
-z=pcolor(zrange,yrange,SFzs);
-set(z,'EdgeColor','none','LineStyle','none');
+z4=pcolor(zrange,yrange,SFys);
+set(z4,'EdgeColor','none','LineStyle','none');
 title('Signum Fy');
 xlabel('z, nm');
 ylabel('y, nm');
-multisave(z,[enddir '/' lbl],[lbl '-SignumFy'],{'png','fig','jpg'}); 
 
-figHandles = findall(0,'Type','figure');
-set(findall(figHandles,'-property','FontSize'),'FontSize',25)
+yset=linspace(0,800,5);
+xset=linspace(-200,200,5);
+yset2=linspace(0,800,9);
+xset2=linspace(-200,200,9);
+
+AllFig = findall(0,'Type','figure');
+set(findall(AllFig,'-property','FontSize'),'FontSize',30,'fontname','helvetica');
+
+%set(findall(fig,'-property','FontSize'),'FontSize',30,'fontname','arial'); 
+set(AllFig,'PaperUnits','inches','PaperPosition', [0 0 11.5 7.5]);
+AllAxes = findobj(AllFig,'type','axes');
+%set(AllFig,'Units','normal');
+set(AllAxes,'Position',[0.12 0.13 0.8 0.8],'linewidth',2,'YTick',xset,'XTick',yset);
+figure(z3)
+
+set(gca,'Position',[0.12 0.2 0.8 0.7],'linewidth',2,'YTick',xset2,'XTick',yset2);
+
+figure(z4)
+set(gca,'Position',[0.12 0.2 0.8 0.7],'linewidth',2,'YTick',xset2,'XTick',yset2);
+
+gca
+multisave(z1,[enddir '/' lbl],[lbl '-Fz'],{'png','fig','jpg'}); 
+multisave(z2,[enddir '/' lbl],[lbl '-Fy'],{'png','fig','jpg'}); 
+multisave(z3,[enddir '/' lbl],[lbl '-SignumFz'],{'png','fig','jpg'}); 
+multisave(z4,[enddir '/' lbl],[lbl '-SignumFy'],{'png','fig','jpg'});
+
